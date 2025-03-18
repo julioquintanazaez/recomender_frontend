@@ -6,8 +6,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server .",
-    "build": "webpack ."
+    "build": "webpack --mode production",
+    "start": "webpack serve --mode development",
+    "dev": "webpack --mode development"
   },
   "keywords": [],
   "author": "",
