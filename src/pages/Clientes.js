@@ -8,8 +8,6 @@ const Clientes = () => {
 
 	const { token, handleLogout } = useContext(UserContext);
 	
-
-		
 	return (	
 		<>
 			<h1>Todo sobre los clientes</h1>

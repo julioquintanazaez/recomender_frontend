@@ -56,7 +56,7 @@ export const UserProvider = ( props ) => {
 			estadoUsuarios, setEstadoUsarios,
 			estadoClientes, setEstadoClientes,
 			estadoProductos, setEstadoProductos,
-			estadoConsumo, setEstadoConsumo
+			estadoConsumo, setEstadoConsumo,
 		}}>
 			{ props.children }
 		</UserContext.Provider>

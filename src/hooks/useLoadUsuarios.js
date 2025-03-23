@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { UserContext } from "../context/UserContext";
 import axios from 'axios'; 
 
-export default function useLoadClientes(){
+export default function useLoadUsuarios(){
 	
 	const {token, handleLogout,
 		   estadoClientes, estadoProductos
@@ -14,7 +14,7 @@ export default function useLoadClientes(){
 		const fetchClientes = async () =>{
 			await axios({
 				method: 'get',
-				url: '/leer_clientes/',                         
+				url: '/usuario/leer_usuarios/',                         
 				headers: {
 					'accept': 'application/json',
 					'Authorization': "Bearer " + token,  

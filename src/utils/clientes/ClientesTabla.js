@@ -7,8 +7,6 @@ import Swal from 'sweetalert2';
 
 import ActualizarClienteModal from "./../../utils/clientes/ActualizarClienteModal";
 import EliminarCliente from "./../../utils/clientes/EliminarCliente";
-import GestorConsumoModal from "./../../utils/consumo/GestorConsumoModal";
-import RecomendacionesModal from "./../../utils/productos/RecomendacionesModal";
 
 const ClientesTabla = ( props ) => {
 
@@ -20,15 +18,11 @@ const ClientesTabla = ( props ) => {
 		return props.clientes?.map((cliente, index) => (
 				<tr className="row-md" key={cliente.id_cliente}>
 					<th scope="row">{index + 1}</th>
-					<td>{cliente.cli_nombre}</td>	
-					<td>{cliente.cli_nacionalidad}</td>	
-					<td>{cliente.cli_edad}</td>	
-					<td>{cliente.cli_genero}</td>
+					<td>{cliente.usuario}</td>	
+					<td>{cliente.role[0]}</td>	
 					<td>
 						<ActualizarClienteModal cliente={cliente}/>
 						<EliminarCliente cliente={cliente}/>
-						<GestorConsumoModal cliente={cliente}/>
-						<RecomendacionesModal cliente={cliente}/>
 					</td>	
 				</tr>					
 			));
@@ -41,10 +35,8 @@ const ClientesTabla = ( props ) => {
 					<tr>
 						<th scope="col">#</th>	
 						<th scope="col">Nombre</th>			
-						<th scope="col">Nacionalidad</th>						
-						<th scope="col">Edad</th>
-						<th scope="col">Género</th>
-						<th scope="col">Acciones</th>
+						<th scope="col">Role</th>
+						<th scope="col">Gestión</th>						
 					</tr>
 				</thead>
 				<tbody className="table-group-divider">						

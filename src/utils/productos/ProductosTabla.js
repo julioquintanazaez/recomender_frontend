@@ -7,22 +7,26 @@ import Swal from 'sweetalert2';
 
 import ActualizarProductoModal from "./../../utils/productos/ActualizarProductoModal";
 import EliminarProducto from "./../../utils/productos/EliminarProducto";
-
+import ActualizarProductoConsumoModal from "./../../utils/productos/ActualizarProductoConsumoModal";
+import useLoadProductos from "./../../hooks/useLoadProductos";
 		
-export default function ProductosTabla ( props ) {
+export default function ProductosTabla ( ) {
 
 	const {	token } = useContext(UserContext);	
-		
-	
+	const productos = useLoadProductos();
+
 	const renderTablaData = () => {
 		
-		return props.productos?.map((producto, index) => (
+		return productos?.map((producto, index) => (
 				<tr className="row-md" key={producto.id_producto}>
 					<th scope="row">{index + 1}</th>
-					<td>{producto.prod_nombre}</td>	
+					<td>{producto.nombre_producto}</td>	
+					<td>{producto.desc_producto}</td>	
+					<td>{producto.consumo_producto}</td>	
 					<td>
 						<ActualizarProductoModal producto={producto}/>
 						<EliminarProducto producto={producto}/>
+						<ActualizarProductoConsumoModal producto={producto}/>
 					</td>	
 				</tr>					
 			));
@@ -34,8 +38,10 @@ export default function ProductosTabla ( props ) {
 				<thead className="table-light">
 					<tr>
 						<th scope="col">#</th>	
-						<th scope="col">Nombre del producto</th>	
-						<th scope="col">Acciones</th>
+						<th scope="col">Nombre</th>	
+						<th scope="col">Descripción</th>
+						<th scope="col">Consumo</th>
+						<th scope="col">Gestión</th>
 					</tr>
 				</thead>
 				<tbody className="table-group-divider">						

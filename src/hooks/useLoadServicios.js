@@ -2,19 +2,19 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { UserContext } from "../context/UserContext";
 import axios from 'axios'; 
 
-export default function useLoadProductos(){
+export default function useLoadServicios(){
 	
 	const {token, handleLogout,
-		   estadoClientes, estadoProductos
+		   estadoClientes, estadoProductos, estadoServicios
 		   } = useContext(UserContext);
-	const [productos, setProductos] = useState([]);	
+	const [servicios, setServicios] = useState([]);	
 	
 	useEffect(() => {
 		
-		const fetchProductos = async () =>{
+		const fetchServicios = async () =>{
 			await axios({
 				method: 'get',
-				url: '/producto/leer_productos/',                         
+				url: '/servicio/leer_servicios/',                         
 				headers: {
 					'accept': 'application/json',
 					'Authorization': "Bearer " + token,  
@@ -22,9 +22,9 @@ export default function useLoadProductos(){
 			}).then(response => {
 				if (response.status === 201) {
 					//console.log(response.data);
-					setProductos(response.data);
+					setServicios(response.data);
 				}else {	
-					setProductos([]);
+					setServicios([]);
 					handleLogout();
 				}
 			}).catch((error) => {
@@ -33,9 +33,9 @@ export default function useLoadProductos(){
 			});		
 		};		
 		
-		fetchProductos();
+		fetchServicios();
 		
-	}, [ estadoClientes, estadoProductos ]);
+	}, [ estadoClientes, estadoProductos, estadoServicios ]);
 	
-	return productos;
+	return servicios;
 };

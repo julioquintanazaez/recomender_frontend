@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-export default function CrearProductosModal( props ) {
+export default function CrearProductoModal( props ) {
 	
 	const { token, setEstadoProductos, handleLogout } = useContext(UserContext);
 	const [show, setShow] = useState(false);
@@ -19,9 +19,10 @@ export default function CrearProductosModal( props ) {
 		
 		await axios({
 			method: 'post',
-			url: "/crear_producto/",
+			url: "/producto/crear_producto/",
 			data: {
-				prod_nombre: formik.values.prod_nombre
+				nombre_producto: formik.values.nombre_producto,
+				desc_producto: formik.values.desc_producto
 			},
 			headers: {
 				'accept': 'application/json',
@@ -52,12 +53,15 @@ export default function CrearProductosModal( props ) {
 	}
 	
 	const validationRules = Yup.object().shape({		
-		prod_nombre: Yup.string().trim()
-			.required("Se requiere el nombre del producto")	
+		nombre_producto: Yup.string().trim()
+			.required("Se requiere el nombre del producto"),
+		desc_producto: Yup.string().trim()
+			.required("Se requiere la descripción del producto")
 	});
 	
 	const registerInitialValues = {
-		prod_nombre: ""
+		nombre_producto: "",
+		desc_producto: ""
 	};
 	
 	const formik = useFormik({		
@@ -67,6 +71,7 @@ export default function CrearProductosModal( props ) {
 			crearProducto();
 			formik.resetForm();
 			setShow(false);
+			handleClose();
 		},
 		validationSchema: validationRules
 	});
@@ -79,30 +84,46 @@ export default function CrearProductosModal( props ) {
 		<Modal show={show} onHide={handleClose} size="lm" > 
 			<Modal.Header closeButton className="header-modal">
 				<Modal.Title>
-					Crear producto
+					Crear
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 			
 				<form className="form-control" onSubmit={formik.handleSubmit}>
-					<div className="form-group mt-3" id="prod_nombre">
-						<label>Introduzca el nombre del cliente</label>
+					<div className="form-group mt-3" id="nombre_producto">
+						<label>Introduzca el nombre del producto</label>
 						<input
 						  type="text"
-						  name="prod_nombre"
-						  value={formik.values.prod_nombre}
+						  name="nombre_producto"
+						  value={formik.values.nombre_producto}
 						  onChange={formik.handleChange}
 						  onBlur={formik.handleBlur}
 						  className={"form-control mt-1" + 
-										(formik.errors.prod_nombre && formik.touched.prod_nombre
+										(formik.errors.nombre_producto && formik.touched.nombre_producto
 										? "is-invalid" : "" )}
 						  placeholder="Introduzca el nombre del producto"
 						/>					
-						<div>{(formik.errors.prod_nombre) ? <p style={{color: 'red'}}>{formik.errors.prod_nombre}</p> : null}</div>
+						<div>{(formik.errors.nombre_producto) ? <p style={{color: 'red'}}>{formik.errors.nombre_producto}</p> : null}</div>
+					</div>	
+					<div className="form-group mt-3" id="desc_producto">
+						<label>Introduzca la descripción del producto</label>
+						<textarea
+						  rows="3"
+						  name="desc_producto"
+						  value={formik.values.desc_producto}
+						  onChange={formik.handleChange}
+						  onBlur={formik.handleBlur}
+						  className={"form-control mt-1" + 
+										(formik.errors.desc_producto && formik.touched.desc_producto
+										? "is-invalid" : "" )}
+						  placeholder="Descripción para la concertación"
+						>	
+						</textarea>
+						<div>{(formik.errors.desc_producto) ? <p style={{color: 'red'}}>{formik.errors.desc_producto}</p> : null}</div>
 					</div>						
 					<div className="d-grid gap-2 mt-3">
 						<button type="submit" className="btn btn-success">
-								Crear producto
+								Guardar
 						</button>					
 					</div>		
 				</form>
@@ -110,7 +131,7 @@ export default function CrearProductosModal( props ) {
 			</Modal.Body>
 			<Modal.Footer>		
 				<Button className="btn btn-secondary" variant="secondary" onClick={handleClose}>
-					Close
+					Cerrar
 				</Button>	  
 			</Modal.Footer>
 			</Modal>

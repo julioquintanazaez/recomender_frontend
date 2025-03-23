@@ -13,7 +13,7 @@ export default function EliminarProducto ( props ) {
 		
 		await axios({
 			method: 'delete',
-			url: "/eliminar_producto/" + id,			
+			url: "/producto/eliminar_producto/" + id,			
 			headers: {
 				'accept': 'application/json',
 				'Authorization': "Bearer " + token,

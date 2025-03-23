@@ -9,25 +9,19 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 
-export default function ActualizarClienteModal( props ) {
+export default function ContrasenaClienteModal( props ) {
 	
 	const [show, setShow] = useState(false);
 	const [validated, setValidated] = useState(false);
 	const { token, user, setEstadoClientes, handleLogout } = useContext(UserContext);
 	
-	const roles_de_usuario = [
-		{ value: "admin-cliente", label: "admin" },
-		{ value: "cliente", label: "cliente" }
-	];
-
 	const actualizarCliente = async (id) => {
 		
 		await axios({
 			method: 'put',
 			url: "/usuario/actualizar_usuario/" + id,
 			data: {
-				usuario : formik.values.usuario,
-				role : formik.values.role.split("-"),
+				newpassword : formik.values.newpassword,
 			},
 			headers: {
 				'accept': 'application/json',
@@ -58,9 +52,9 @@ export default function ActualizarClienteModal( props ) {
 	}
 	
 	const validationRules = Yup.object().shape({		
-		usuario: Yup.string().trim()
+		actual: Yup.string().trim()
 			.required("Se requiere el nombre"),
-		role: Yup.string().trim()
+        newpassword: Yup.string().trim()
 			.required("Se requiere seleccione el rol")
 	});
 	

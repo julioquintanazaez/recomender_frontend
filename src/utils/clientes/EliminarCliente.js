@@ -13,7 +13,7 @@ export default function EliminarCliente  ( props ) {
 		
 		await axios({
 			method: 'delete',
-			url: "/eliminar_cliente/" + id,			
+			url: "/usuario/eliminar_usuario/" + id,			
 			headers: {
 				'accept': 'application/json',
 				'Authorization': "Bearer " + token,
@@ -32,8 +32,8 @@ export default function EliminarCliente  ( props ) {
 	
 	const handleDeleteSubmit = (event) => {
 		event.preventDefault();
-		if (props.equipment.equipment_id != null){
-			eliminarCliente(props.equipment.equipment_id);
+		if (props.cliente.id != null){
+			eliminarCliente(props.cliente.id);
 		}else{
 			Swal.fire("Seleccione un cliente para eliminar", "", "success");	
 		}

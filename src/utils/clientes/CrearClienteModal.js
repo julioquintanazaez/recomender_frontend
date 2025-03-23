@@ -16,21 +16,20 @@ export default function CrearClienteModal( props ) {
 	const [show, setShow] = useState(false);
 	const [validated, setValidated] = useState(false);
 	
-	const genero = [
-					{ value: "M", label: "M" },
-					{ value: "F", label: "F" }
-				];	
-	
+	const roles_de_usuario = [
+		{ value: "admin-cliente", label: "admin" },
+		{ value: "cliente", label: "cliente" }
+	];
+
 	const crearCliente = async () => {
 		
 		await axios({
 			method: 'post',
-			url: "/crear_cliente/",
+			url: "/usuario/crear_usuario/",
 			data: {
-				cli_nombre : formik.values.cli_nombre,
-				cli_nacionalidad : formik.values.cli_nacionalidad,
-				cli_edad : formik.values.cli_edad,
-				cli_genero : formik.values.cli_genero
+				usuario : formik.values.usuario,
+				role : formik.values.role.split("-"),
+				hashed_password: formik.values.hashed_password,
 			},
 			headers: {
 				'accept': 'application/json',
@@ -38,9 +37,9 @@ export default function CrearClienteModal( props ) {
 			},
 		}).then(response => {
 			if (response.status === 201) {
-				console.log("Cliente creado satisfactoriamente");	
-				setEstadoClientes("Cliente creado satisfactoriamente" + Math.random());
-				Swal.fire("Cliente creado satisfactoriamente", "", "success");
+				console.log("Cliente del sistema creado satisfactoriamente");	
+				setEstadoClientes("Cliente del sistema creado satisfactoriamente" + Math.random());
+				Swal.fire("Cliente del sistema creado satisfactoriamente", "", "success");
 			}
 		}).catch((error) => {
 			if (error.response.status === 500) {
@@ -61,21 +60,20 @@ export default function CrearClienteModal( props ) {
 	}
 	
 	const validationRules = Yup.object().shape({		
-		cli_nombre: Yup.string().trim()
+		usuario: Yup.string().trim()
 			.required("Se requiere el nombre"),
-		cli_nacionalidad: Yup.string().trim()
-			.required("Se requiere la nacionalidad"),
-		cli_edad: Yup.number().positive()
-			.required("Se requiere la edad"),
-		cli_genero: Yup.string().trim()
-			.required("Se requiere seleccione el género")
+		role: Yup.string().trim()
+			.required("Se requiere seleccione un rol"),
+		hashed_password: Yup.string()
+			.min(5, "Password debe contener al menos 3 caracteres")
+			.required("Se requiere el password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*[\]{}()?"\\,><':;|_~`=+-])[a-zA-Z\d!@#$%^&*[\]{}()?"\\,><':;|_~`=+-]{12,99}$/,
+					'Debe contener al menos 5 caracteres, 1 mayáscula, 1 miníscila, 1 caracter especial, y 1 número'),	
 	});
 	
 	const registerInitialValues = {
-		cli_nombre: "",
-		cli_nacionalidad: "",
-		cli_edad: 1,
-		cli_genero: genero[0]["value"]
+		usuario: "",
+		role: "usuario",
+		hashed_password: "",
 	};
 	
 	const formik = useFormik({		
@@ -84,9 +82,11 @@ export default function CrearClienteModal( props ) {
 			console.log("Guardar datos...");
 			crearCliente();
 			formik.resetForm();
+			handleClose();
 		},
 		validationSchema: validationRules
 	});
+	
 	
 	const RenderOptions = (listValues) => {
 		return (
@@ -95,86 +95,70 @@ export default function CrearClienteModal( props ) {
 			) 
 		)
 	};
-	
+
 	return (
 		<>
 		<button className="btn btn-info" onClick={handleShow}>
-			Nuevo cliente 
+			Cliente del sistema 
 		</button>
 		<Modal show={show} onHide={handleClose} size="lm" > 
 			<Modal.Header closeButton className="header-modal">
 				<Modal.Title>
-					Nuevo cliente
+					Nuevo
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 			
 				<form className="form-control" onSubmit={formik.handleSubmit}>
-					<div className="form-group mt-3" id="cli_nombre">
-						<label>Introduzca el nombre del cliente</label>
+					<div className="form-group mt-3" id="usuario">
+						<label>Introduzca el usuario</label>
 						<input
 						  type="text"
-						  name="cli_nombre"
-						  value={formik.values.cli_nombre}
+						  name="usuario"
+						  value={formik.values.usuario}
 						  onChange={formik.handleChange}
 						  onBlur={formik.handleBlur}
 						  className={"form-control mt-1" + 
-										(formik.errors.cli_nombre && formik.touched.cli_nombre
+										(formik.errors.usuario && formik.touched.usuario
 										? "is-invalid" : "" )}
-						  placeholder="Introduzca el nombre del cliente"
+						  placeholder="Introduzca el usuario del cliente"
 						/>					
-						<div>{(formik.errors.cli_nombre) ? <p style={{color: 'red'}}>{formik.errors.cli_nombre}</p> : null}</div>
+						<div>{(formik.errors.usuario) ? <p style={{color: 'red'}}>{formik.errors.usuario}</p> : null}</div>
 					</div>		
-					<div className="form-group mt-3" id="cli_nacionalidad">
-						<label>Introduzca la nacionalidad del cliente</label>
-						<input
-						  type="text"
-						  name="cli_nacionalidad"
-						  value={formik.values.cli_nacionalidad}
-						  onChange={formik.handleChange}
-						  onBlur={formik.handleBlur}
-						  className={"form-control mt-1" + 
-										(formik.errors.cli_nacionalidad && formik.touched.cli_nacionalidad
-										? "is-invalid" : "" )}
-						  placeholder="Introduzca la nacionalidad del cliente"
-						/>					
-						<div>{(formik.errors.cli_nacionalidad) ? <p style={{color: 'red'}}>{formik.errors.cli_nacionalidad}</p> : null}</div>
-					</div>		
-					<div className="form-group mt-3" id="cli_edad">
-						<label>Introduzca la edad del cliente</label>
-						<input
-						  type="number"
-						  name="cli_edad"
-						  value={formik.values.cli_edad}
-						  onChange={formik.handleChange}
-						  onBlur={formik.handleBlur}
-						  className={"form-control mt-1" + 
-										(formik.errors.cli_edad && formik.touched.cli_edad
-										? "is-invalid" : "" )}
-						  placeholder="Introduzca la edad del cliente"
-						/>					
-						<div>{(formik.errors.cli_edad) ? <p style={{color: 'red'}}>{formik.errors.cli_edad}</p> : null}</div>
-					</div>		
-					<div className="form-group mt-3" id="cli_genero">
-						<label>Seleccione el género para el cliente</label>
+					<div className="form-group mt-3" id="role">
+						<label>Seleccione el role a desempeñar para el cliente del sistema</label>
 						<select
 						  type="text"
-						  name="cli_genero"
-						  value={formik.values.cli_genero}
+						  name="role"
+						  value={formik.values.role}
 						  onChange={formik.handleChange}
 						  onBlur={formik.handleBlur}
 						  className={"form-control mt-1" + 
-										(formik.errors.cli_genero && formik.touched.cli_genero
+										(formik.errors.role && formik.touched.role
 										? "is-invalid" : "" )
 									}>
-							{RenderOptions(genero)} 
-						<option value="" label="Seleccione una opción">Seleccione una opción</option>	
+							{RenderOptions(roles_de_usuario)} 
 						</select>
-						<div>{(formik.errors.cli_genero) ? <p style={{color: 'red'}}>{formik.errors.cli_genero}</p> : null}</div>
-					</div>							
+						<div>{(formik.errors.role) ? <p style={{color: 'red'}}>{formik.errors.role}</p> : null}</div>
+					</div>		
+					<div className="form-group mt-3" id="hashed_password">
+						<label>Introduzca una contraseña para el usuario</label>
+						<input
+						  type="password"
+						  name="hashed_password"
+						  value={formik.values.hashed_password}
+						  onChange={formik.handleChange}
+						  onBlur={formik.handleBlur}
+						  className={"form-control mt-1" + 
+										(formik.errors.hashed_password && formik.touched.hashed_password
+										? "is-invalid" : "" )}
+						  placeholder="Contraseña del usuario"
+						/>					
+						<div>{(formik.errors.hashed_password) ? <p style={{color: 'red'}}>{formik.errors.hashed_password}</p> : null}</div>
+					</div>					
 					<div className="d-grid gap-2 mt-3">
 						<button type="submit" className="btn btn-success">
-								Crear cliente
+								Guardar
 						</button>					
 					</div>		
 				</form>
@@ -182,7 +166,7 @@ export default function CrearClienteModal( props ) {
 			</Modal.Body>
 			<Modal.Footer>		
 				<Button className="btn btn-secondary" variant="secondary" onClick={handleClose}>
-					Close
+					Cerrar
 				</Button>	  
 			</Modal.Footer>
 			</Modal>
